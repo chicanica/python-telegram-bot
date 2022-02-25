@@ -30,31 +30,23 @@ def get_text_messages(message):
 
     if ms_text == "Главное меню" or ms_text == "👋 Главное меню" or ms_text == "Вернуться в главное меню":  # ..........
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton("Развлечения")
-        btn2 = types.KeyboardButton("WEB-камера")
-        btn3 = types.KeyboardButton("Управление")
+        btn1 = types.KeyboardButton("Задачи")
         back = types.KeyboardButton("Помощь")
         markup.add(btn1, btn2, btn3, back)
         bot.send_message(chat_id, text="Вы в главном меню", reply_markup=markup)
 
-    elif ms_text == "Развлечения":  # ..................................................................................
+    elif ms_text == "Задачи":  # ..................................................................................
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton("Прислать собаку")
         btn2 = types.KeyboardButton("Прислать анекдот")
         back = types.KeyboardButton("Вернуться в главное меню")
         markup.add(btn1, btn2, back)
-        bot.send_message(chat_id, text="Развлечения", reply_markup=markup)
+        bot.send_message(chat_id, text="Задачи", reply_markup=markup)
 
     elif ms_text == "/dog" or ms_text == "Прислать собаку":  # .........................................................
         bot.send_message(chat_id, text="еще не готово...")
 
     elif ms_text == "Прислать анекдот":  # .............................................................................
-        bot.send_message(chat_id, text="еще не готово...")
-
-    elif ms_text == "WEB-камера":
-        bot.send_message(chat_id, text="еще не готово...")
-
-    elif ms_text == "Управление":  # ...................................................................................
         bot.send_message(chat_id, text="еще не готово...")
 
     elif ms_text == "Помощь" or ms_text == "/help":  # .................................................................
