@@ -1,9 +1,9 @@
-# Вариант 1 - самый простой чат бот, просто отзывается
+# Телеграм-бот v.002 - бот создаёт меню, присылает собачку, и анекдот
 
 import telebot  # pyTelegramBotAPI	4.3.1
 from telebot import types
 
-bot = telebot.TeleBot('5193117811:AAH0hWHVx0kH08sub52IFj2SAdJi1eugY-k')  # Создаем экземпляр бота @Ivanov_Ivan_1MD19_bot
+bot = telebot.TeleBot('5193117811:AAH0hWHVx0kH08sub52IFj2SAdJi1eugY-k')  # Создаем экземпляр бота
 
 # -----------------------------------------------------------------------
 # Функция, обрабатывающая команду /start
@@ -18,7 +18,7 @@ def start(message, res=False):
 
     bot.send_message(chat_id,
                      text="Привет, {0.first_name}! Я тестовый бот для курса программирования на языке ПаЙтон".format(
-                         message.from_user))
+                         message.from_user), reply_markup=markup)
 
 
 # -----------------------------------------------------------------------
