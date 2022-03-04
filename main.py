@@ -2,8 +2,11 @@
 
 import telebot  # pyTelegramBotAPI	4.3.1
 from telebot import types
+import requests
+import bs4
 
 bot = telebot.TeleBot('5193117811:AAH0hWHVx0kH08sub52IFj2SAdJi1eugY-k')  # Создаем экземпляр бота
+
 
 # -----------------------------------------------------------------------
 # Функция, обрабатывающая команду /start
@@ -28,14 +31,28 @@ def get_text_messages(message):
     chat_id = message.chat.id
     ms_text = message.text
 
-
     if ms_text == "Главное меню" or ms_text == "👋 Главное меню" or ms_text == "Вернуться в главное меню":  # ..........
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton("Задачи")
-        btn2 = types.KeyboardButton("Помощь")
+        btn2 = types.KeyboardButton("Развлечения")
+        btn3 = types.KeyboardButton("Помощь")
+        back = types.KeyboardButton("Вернуться в главное меню")
+        markup.add(btn1, btn2, btn3, back)
+        bot.send_message(chat_id, text="Вы в главном меню", reply_markup=markup)
+
+    elif ms_text == "Развлечения":  # ..................................................................................
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = types.KeyboardButton("Прислать анекдот c anekdotme.ru")
+        btn2 = types.KeyboardButton("Прислать анекдот c nekdo.ru")
         back = types.KeyboardButton("Вернуться в главное меню")
         markup.add(btn1, btn2, back)
-        bot.send_message(chat_id, text="Вы в главном меню", reply_markup=markup)
+        bot.send_message(chat_id, text="Развлечения", reply_markup=markup)
+
+    elif ms_text == "Прислать анекдот c anekdotme.ru":  # .............................................................................
+        bot.send_message(chat_id, text=get_anekdot('http://anekdotme.ru/random',  '.anekdot_text'))
+
+    elif ms_text == "Прислать анекдот c nekdo.ru":  # .............................................................................
+        bot.send_message(chat_id, text=get_anekdot('https://nekdo.ru/random', '.text'))
 
 
     elif ms_text == "Задачи":  # ..................................................................................
@@ -69,27 +86,32 @@ def get_text_messages(message):
 
     elif ms_text == "3":  # .........................................................
         name = 'Вероника'
-        name5 = name*5
+        name5 = name * 5
         bot.send_message(chat_id, text=name5)
 
 
     elif ms_text == "4":  # .........................................................
         bot.send_message(chat_id, text='Ваше имя?')
+
         @bot.message_handler(content_types=['text'])
         def inputName(message):
             userName = message.text
             bot.send_message(chat_id, text='Сколько Вам лет?')
+
             @bot.message_handler(content_types=['text'])
             def inputAge(message):
                 userAge = message.text
                 userMessage = 'Привет, ' + userName + '! Тебе уже ' + userAge + ' лет?! Это так круто!'
                 bot.send_message(chat_id, text=userMessage)
+
             bot.register_next_step_handler(message, inputAge)
+
         bot.register_next_step_handler(message, inputName)
 
 
     elif ms_text == "5":  # .........................................................
         bot.send_message(chat_id, text='Сколько Вам лет?')
+
         @bot.message_handler(content_types=['text'])
         def inputAge(message):
             userAge = message.text
@@ -99,11 +121,13 @@ def get_text_messages(message):
             else:
                 ageMessage = 'Ты уже достаточно взрослый, присоединяйся к нам!'
             bot.send_message(chat_id, text=ageMessage)
+
         bot.register_next_step_handler(message, inputAge)
 
 
     elif ms_text == "6":  # .........................................................
         bot.send_message(chat_id, text='Ваше имя?')
+
         @bot.message_handler(content_types=['text'])
         def inputName(message):
             userName = message.text
@@ -111,17 +135,20 @@ def get_text_messages(message):
             bot.send_message(chat_id, text=userName[::-1])
             bot.send_message(chat_id, text=userName[-3:])
             bot.send_message(chat_id, text=userName[0:5])
+
         bot.register_next_step_handler(message, inputName)
 
 
     elif ms_text == "7":  # .........................................................
         bot.send_message(chat_id, text='Ваше имя?')
+
         @bot.message_handler(content_types=['text'])
         def inputName(message):
             userName = message.text
             nameMessage = 'Кол-во букв в имени: ' + str(len(userName))
             bot.send_message(chat_id, text=nameMessage)
             bot.send_message(chat_id, text='Сколько Вам лет?')
+
             @bot.message_handler(content_types=['text'])
             def inputAge(message):
                 userAge = message.text
@@ -138,23 +165,28 @@ def get_text_messages(message):
                     comp = ageNum1 * ageNum2
                 ageMessage2 = 'Произведение цифр возраста: ' + str(comp)
                 bot.send_message(chat_id, text=ageMessage2)
+
             bot.register_next_step_handler(message, inputAge)
+
         bot.register_next_step_handler(message, inputName)
 
 
     elif ms_text == "8":  # .........................................................
         bot.send_message(chat_id, text='Ваше имя?')
+
         @bot.message_handler(content_types=['text'])
         def inputName(message):
             userName = message.text
             bot.send_message(chat_id, text=userName.upper())
             bot.send_message(chat_id, text=userName.lower())
             bot.send_message(chat_id, text=userName.capitalize())
+
         bot.register_next_step_handler(message, inputName)
 
 
     elif ms_text == "9":  # .........................................................
         bot.send_message(chat_id, text='Ваше имя?')
+
         @bot.message_handler(content_types=['text'])
         def inputName(message):
             userName = message.text
@@ -164,6 +196,7 @@ def get_text_messages(message):
                 nameMessage = 'Correct userName value'
             bot.send_message(chat_id, text=nameMessage)
             bot.send_message(chat_id, text='Сколько Вам лет?')
+
             @bot.message_handler(content_types=['text'])
             def inputAge(message):
                 userAge = message.text
@@ -173,11 +206,14 @@ def get_text_messages(message):
                 else:
                     ageMessage = 'Correct userAge value'
                 bot.send_message(chat_id, text=ageMessage)
+
             bot.register_next_step_handler(message, inputAge)
+
         bot.register_next_step_handler(message, inputName)
 
     elif ms_text == "10":  # .........................................................
         bot.send_message(chat_id, text='Сколько будет 8+2*3?')
+
         @bot.message_handler(content_types=['text'])
         def inputAnswer(message):
             userAnswer = message.text
@@ -187,6 +223,7 @@ def get_text_messages(message):
             else:
                 userMessage = 'Неверно!'
             bot.send_message(chat_id, text=userMessage)
+
         bot.register_next_step_handler(message, inputAnswer)
 
 
@@ -202,7 +239,21 @@ def get_text_messages(message):
     else:  # ...........................................................................................................
         bot.send_message(chat_id, text="Вы написали: " + ms_text)
 
+
+def get_anekdot(link, className):
+    array_anekdots = []
+    req_anek = requests.get(link)
+    soup = bs4.BeautifulSoup(req_anek.text, "html.parser")
+    result_find = soup.select(className)
+    for result in result_find:
+        array_anekdots.append(result.getText().strip())
+    return array_anekdots[0]
+
+
+
+
+
 # -----------------------------------------------------------------------
-bot.polling(none_stop=True, interval=0) # Запускаем бота
+bot.polling(none_stop=True, interval=0)  # Запускаем бота
 
 print()
